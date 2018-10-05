@@ -1,0 +1,130 @@
+comprueba.py
+============
+
+El programa comprueba.py permite comprobar el funcionamiento correcto
+de otros programas frente a un conjunto de pruebas. Tiene dos modos de
+funcionamiento:
++ Normal: se ejecuta un programa y se compara la salida con la salida
+  esperada.
++ Entrelazado: se ejecuta un programa y se compara la salida de cada
+  línea de entrada con la correspondiente salida esperada.
+
+Modo normal:
+-----------
+
+En el modo normal, se invoca comprueba.py con su nombre seguido de las
+posibles opciones, el nombre del programa y, posiblemente uno o más
+ficheros:
++ Si se invoca con "comprueba.py prog", se ejecuta prog y se espera
+que no produzca ni salida ni salida de error.
++ Si se invoca con "comprueba.py prog salida", se ejecuta prog y se
+espera que produzca una salida igual a salida y no produzca salida de
+error.
++ Si se invoca con "comprueba.py prog entrada salida", se ejecuta prog
+pasándole como entrada el fichero prog y se espera que produzca una
+salida igual a salida y no produzca salida de error.
++ Si se invoca con "comprueba.py prog entrada salida error", se
+ejecuta prog pasándole como entrada el fichero prog y se espera que
+produzca una salida igual a salida y una salida de error igual a
+error.
+
++ Finalmente, si se invoca con "comprueba.py prog dir1 dir2 ...", se
+recorren los directorios dir1, dir2, etc. y se buscan ficheros con
+extensión .i (de entrada), .o (de salida) y .e (de error). Se ejecuta
+entonces prog con cada uno de esos ficheros, agrupados en caso de que
+tengan el mismo nombre. Por ejemplo, si en dir1 están los ficheros
+facil.i, facil.o, dificil.i, dificil.e se ejecutará prog con entrada
+facil.i comparando la salida con facil.o y con entrada dificil.i
+comparando la salida de error con dificil.e.
+
+En cada uno de los casos, se presenta un resumen con las diferencias
+entre las salidas esperadas (estándar y de error) y las obtenidas.
+
+Por defecto se pasa el fichero de entrada por la entrada estándar. Si
+se utiliza la opción --argumento o -a, el fichero de entrada se pasa
+como argumento al programa.
+
+Modo entrelazado:
+----------------
+
+Este modo se activa mediante la opción --entrelazado o -e. Cuando se
+utiliza, el programa debe ser un programa python. Para la invocación
+se escribe "comprueba.py -e prog" y cero o más ficheros o
+directorios. Si no se especifica ningún fichero, se lee de la entrada
+estándar. Tanto la entrada estándar como los ficheros deben tener un
+formato especial. Un fichero en este formato consiste en una serie de
+líneas cada una de las cuales tiene una cadena que representa la línea
+de entrada seguida de una o más cadenas separadas por @@ representando
+las líneas de salida esperadas para esa entrada y por una o más
+cadenas separadas por @* representando la salida de error
+esperada. Por ejemplo, si en el fichero simple tenemos:
+
+2+3 @@ 5
+2/0 @* Error de ejecución
+
+indicamos que se espera que ante la entrada 2+3 el programa escriba 5
+en la salida estándar y que ante la entrada 2/0 se espera que en la
+salida de error aparezca la cadena "Error de ejecución". Si ejecutamos
+"comprueba.py -e calculadora simple" se ejecutará el programa
+calculadora y se comprobará su comportamiento. Las líneas que se
+comporten según lo esperado no generarán salida mientras que las
+restantes harán que se muestre la entrada junto con la salida esperada
+y la obtenida.
+
+Si se invoca pasando un directorio, se ejecuta el programa con los
+ficheros del directorio que tengan la extensión especificada en la
+opción sufijoEntrelazado (por defecto "pr").
+
+Si tenemos una implementación correcta del programa, podemos emplear
+la opción -g para generar la salida en el formato adecuado para que
+sirva de entrada para el modo entrelazado.
+
+Opciones:
+--------
+  -h, --help            muestra un mensaje de ayuda.
+  -a, --argumento       el fichero de entrada se pasa como argumento al
+                        programa, sin efecto en el modo entrelazado. Si se usa
+			con -A, el fichero de entrada es el último argumento.
+  -A, --argumentos      lista de argumentos que se pasan al programa,
+                        separados por blancos. Por defecto no se le pasa
+			ninguno.
+  -E MARCAERROR, --marcaError=MARCAERROR
+                        separador de las líneas de error en modo entrelazado,
+                        por defecto: @*.
+  -e, --entrelazado     utilizar el modo entrelazado.
+  -g, --genera          generar la salida en el formato adecuado para
+                        entrelazado (implica -e).
+  -n, --noColores       no utilizar colores en la salida.
+  -S SEPARACAMPOS, --separaCampos=SEPARACAMPOS
+                        separador de los campos en modo entrelazado, por
+                        defecto: @@.
+  -s SUFIJOS, --sufijos=SUFIJOS
+                        sufijos de los ficheros de entrada, salida y error,
+                        por defecto: i,o,e.
+  -t, --todas           en modo entrelazado, muestra todas las líneas incluso
+                        si no hay diferencias respecto a lo esperado.
+  -x SUFIJOENTRELAZADO, --sufijoEntrelazado=SUFIJOENTRELAZADO
+                        sufijo de los ficheros con pruebas entrelazadas, por
+                        defecto: pr.
+
+Licencia:
+--------
+
+comprueba.py se distribuye con licencia GPL versión 2. En el fichero
+gpl.txt se pueden leer los términos de la misma.
+
+Historia:
+--------
+
+Versión 0.9: primera versión distribuida públicamente.
+Versión 0.91: incluye la opción -g.
+Versión 0.92: corregidos algunos bugs, permite la ejecución de
+programas en otro directorio, añadida más flexibilidad para su uso en
+              directorios.
+Versión 0.93: usado sólo un diccionario para locales y globales por problemas
+              en la ejecución de algunos programas. Además se hace que
+	      __name__ sea __main__.
+Versión 0.94: añadida la opción --argumento.
+Versión 0.95: añadida la opción --argumentos.
+Versión 0.96: pasado a UTF8
+Versión 0.97: añadido como error dejar entrada sin leer.
