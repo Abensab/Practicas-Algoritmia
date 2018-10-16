@@ -7,7 +7,6 @@ import sys
 import time
 
 
-
 def create_labyrinth(rows: int, cols: int, corridors) -> UndirectedGraph:
     vertices = [(r, c) for r in range(rows) for c in range(cols)]
     mfs = MergeFindSet()
@@ -17,7 +16,7 @@ def create_labyrinth(rows: int, cols: int, corridors) -> UndirectedGraph:
     return UndirectedGraph(E=corridors)
 
 
-def jump_matrix(grafo, num_rows, num_cols, v_inicial):
+def jump_matrix(grafo, num_rows: int, num_cols: int, v_inicial):
     m = []
     for r in range(num_rows):
         m.append([0] * num_cols)
@@ -98,22 +97,29 @@ def get_edges(fichero):
     return edges, descartados
 
 
+def lee_fichero(fichero):
+    f = open(fichero)
+    mapa = []
+    for linea in f:
+        mapa.append(linea.split(','))
+    f.close()
+    return mapa
+
+
 if __name__ == '__main__':
     start_time = time.time()
 
-    f = open(sys.argv[1])
-    fichero = []
     # Paso 1: Leer el fichero y guardarlo en una matriz
-    for linea in f:
-        fichero.append(linea.split(','))
-    f.close()
-    rows = len(fichero)
-    cols = len(fichero[0])
+    mapa = lee_fichero(sys.argv[1])
+
+    rows = len(mapa)
+    cols = len(mapa[0])
+
     source = (0, 0)
     target = (rows - 1, cols - 1)
 
     # Paso 2: Obtener la lista de aristas del laberinto y las aristas descartadas
-    edges, descartados = get_edges(fichero)
+    edges, descartados = get_edges(mapa)
 
     # Paso 3: Crear el grafo para recorrer el único camino
     graph = create_labyrinth(rows, cols, edges)
@@ -125,14 +131,14 @@ if __name__ == '__main__':
     # Paso 5: Obtener el vértice que hay que añadir al grafo para encontrar el camino más corto y la distancia
     edge, new_distance = get_remove_edge(matrix_inicio, matrix_fin, descartados)
 
-    #Paso 6: Mostrar el resultado por pantalla para pasar los tests
+    # Paso 6: Mostrar el resultado por pantalla para pasar los tests
     print(' '.join([str(i[0]) + " " + str(i[1]) for i in edge]))
 
     # Indistintamente puede usarse una forma o la otra, tener en cuenta las carácterísticas de estas matrices
     print(matrix_fin[0][0])
-    #print(matrix_inicio[rows-1][cols-1])
+    # print(matrix_inicio[rows-1][cols-1])
 
-    print(new_distance+1)
+    print(new_distance + 1)
 
     ''' No es necesario añadir el vertice en el grafo ni volver a calcular el camino,
         porque podemos obtenerlos sin necesidad de calcular nuevos caminos, como
