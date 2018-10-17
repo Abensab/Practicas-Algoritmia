@@ -2,11 +2,11 @@ from algoritmia.datastructures.mergefindsets import MergeFindSet
 from algoritmia.datastructures.digraphs import UndirectedGraph
 from algoritmia.datastructures.queues import Fifo
 
-from Utils.labyrinthviewer import LabyrinthViewer
+#from Utils.labyrinthviewer import LabyrinthViewer
 import sys
 import time
 
-from Utils.printing import format_matrix
+#from Utils.printing import format_matrix
 
 
 def create_labyrinth(rows: int, cols: int, corridors) -> UndirectedGraph:
