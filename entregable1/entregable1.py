@@ -6,6 +6,8 @@ from Utils.labyrinthviewer import LabyrinthViewer
 import sys
 import time
 
+from Utils.printing import format_matrix
+
 
 def create_labyrinth(rows: int, cols: int, corridors) -> UndirectedGraph:
     vertices = [(r, c) for r in range(rows) for c in range(cols)]
@@ -140,6 +142,9 @@ if __name__ == '__main__':
 
     print(new_distance + 1)
 
+    # print(format_matrix(matrix_inicio))
+    # print("\n\n")
+    # print(format_matrix(matrix_fin))
     ''' No es necesario añadir el vertice en el grafo ni volver a calcular el camino,
         porque podemos obtenerlos sin necesidad de calcular nuevos caminos, como
         se hace anteriormente. Los siguientes pasos se han de realizar en el caso
@@ -151,10 +156,12 @@ if __name__ == '__main__':
     #
     # road = path(graph, source, target)
     # new_road = path(new_graph, source, target)
-
+    #
     # print("\n\n--- %s seconds ---" % (time.time() - start_time))
-
+    #
     # viewer = LabyrinthViewer(graph, canvas_width=800, canvas_height=480, margin=10)
     # viewer.add_path(new_road, color="green", offset=-3)
-    # viewer.add_path(road, color="blue")
+    # viewer.add_path(road, color="blue",)
+    # viewer.add_marked_cell(edge[0])
+    # viewer.add_marked_cell(edge[1])
     # viewer.run()
