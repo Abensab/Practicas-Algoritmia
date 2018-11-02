@@ -143,11 +143,11 @@ def lee_fichero_imprenta(nombreFichero):
 def muestra_solucion(lista_hojas):
     ts = time.time()
     st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H:%M')
-    title = 'Solution -'+ str(st)
-    new_file = open("/solutions/"+title+'.txt','w')
+    title = 'Solution-'+ str(st)
+    new_file = open("solution/"+title+'.txt','w')
     for hoja in lista_hojas:
         for k, folleto in hoja.pamphlet.items():
-            new_file.write('{} {} {} {} '.format(hoja.id, folleto[0], k[1], k[0]))
+            new_file.write('{} {} {} {}\n'.format(hoja.id, folleto[0], k[1], k[0]))
     new_file.close()
 
 
