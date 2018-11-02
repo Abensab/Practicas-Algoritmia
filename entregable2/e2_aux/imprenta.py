@@ -82,7 +82,7 @@ class Hoja:
 
     def put_pamphlet(self, pamphlet):
         pamphlet_area=pamphlet[1]*pamphlet[2]
-        print("Area: ", self.area, "Pamphlet:", pamphlet_area)
+        #print("Area: ", self.area, "Pamphlet:", pamphlet_area)
         if pamphlet_area<=self.area:
             position = self.get_fist_available_by_width(pamphlet[1], pamphlet[2])
             # position = self.get_fist_available_by_width(pamphlet[1], pamphlet[2])
