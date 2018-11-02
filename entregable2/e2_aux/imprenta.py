@@ -144,9 +144,10 @@ def lee_fichero_imprenta(nombreFichero):
 def muestra_solucion(lista_hojas):
     ts = time.time()
     st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H-%M')
-    path = "entregable2/e2_aux/solution/"
-    title = 'Solution-' + str(st)
-    new_file = open(path + title + '.txt', 'w')
+    #path = "entregable2/e2_aux/solution/" #windows
+    path = "solution/" #linux
+    title = 'Solution-' + str(st)+'.txt'
+    new_file = open(path+title, 'w')
     for hoja in lista_hojas:
         for k, folleto in hoja.pamphlet.items():
             new_file.write('{} {} {} {}\n'.format(folleto[0], hoja.id, k[0], k[1]))
