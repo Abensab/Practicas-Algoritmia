@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*
 import sys
 from typing import *
-from time import time
+import time
+import datetime
 
 Folleto = Tuple[int, int, int]
 PosicionFolleto = Tuple[int, int, int, int]
@@ -82,7 +83,7 @@ class Hoja:
 
     def put_pamphlet(self, pamphlet):
         pamphlet_area=pamphlet[1]*pamphlet[2]
-        print("Area: ", self.area, "Pamphlet:", pamphlet_area)
+        #print("Area: ", self.area, "Pamphlet:", pamphlet_area)
         if pamphlet_area<=self.area:
             position = self.get_fist_available_by_width(pamphlet[1], pamphlet[2])
             # position = self.get_fist_available_by_width(pamphlet[1], pamphlet[2])
@@ -140,15 +141,20 @@ def lee_fichero_imprenta(nombreFichero):
 
 
 def muestra_solucion(lista_hojas):
+    ts = time.time()
+    st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H:%M')
+    title = 'Solution -'+ str(st)
+    new_file = open("/solutions/"+title+'.txt','w')
     for hoja in lista_hojas:
         for k, folleto in hoja.pamphlet.items():
-            print('{} {} {} {} Folleto: {}'.format(hoja.id, folleto[0], k[1], k[0], folleto))
+            new_file.write('{} {} {} {} '.format(hoja.id, folleto[0], k[1], k[0]))
+    new_file.close()
 
 
 if __name__ == "__main__":
-    start = time()
+    start = time.time()
     i, v = lee_fichero_imprenta(sys.argv[1])
     res = optimiza_folletos(i, v)
     print("--", len(res), "folletos")
     muestra_solucion(res)
-    print("\n---Program completed in:", time() - start, "seconds---")
+    print("\n---Program completed in:", time.time() - start, "seconds---")
