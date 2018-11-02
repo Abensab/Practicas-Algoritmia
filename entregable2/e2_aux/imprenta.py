@@ -142,8 +142,8 @@ def lee_fichero_imprenta(nombreFichero):
 def muestra_solucion(lista_hojas):
     ts = time.time()
     st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H-%M')
-    #path = "entregable2/e2_aux/solution/" #windows
-    path = "solution/" #linux
+    path = "C:\\Users\\Abrahan\\PycharmProjects\\Practicas-Algoritmia\\entregable2\\e2_aux\\solution\\" #windows
+    #path = "solution/" #linux
     title = 'Solution-' + str(st)+'.txt'
     new_file = open(path+title, 'w')
     for hoja in lista_hojas:
@@ -153,6 +153,7 @@ def muestra_solucion(lista_hojas):
 
 if __name__ == "__main__":
     start = time.time()
+    print(sys.path)
     i, v = lee_fichero_imprenta(sys.argv[1])
     res = optimiza_folletos(i, v)
     print("--", len(res), "folletos")
