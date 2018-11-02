@@ -10,7 +10,7 @@ PosicionFolleto = Tuple[int, int, int, int]
 
 """
                        FORMAT OF FILE:
-        |N Folleto |  Pos. Horizontal	|  Pos. Vertical |
+        |N Folleto |  Tam. Horizontal	|  Tam. Vertical |
         |------------------------------------------------|
         |    1	    |         0	        |       0        |
         |    2	    |         20        |       0        |
@@ -82,9 +82,9 @@ class Hoja:
         return True
 
     def put_pamphlet(self, pamphlet):
-        pamphlet_area=pamphlet[1]*pamphlet[2]
-        #print("Area: ", self.area, "Pamphlet:", pamphlet_area)
-        if pamphlet_area<=self.area:
+        pamphlet_area = pamphlet[1] * pamphlet[2]
+        # print("Area: ", self.area, "Pamphlet:", pamphlet_area)
+        if pamphlet_area <= self.area:
             position = self.get_fist_available_by_width(pamphlet[1], pamphlet[2])
             # position = self.get_fist_available_by_width(pamphlet[1], pamphlet[2])
             if position is None:
@@ -125,7 +125,8 @@ def optimiza_folletos(size, folletos):
             new_hoja = Hoja(len(sol) + 1, size)
             new_hoja.put_pamphlet(folletos[i])
             sol.append(new_hoja)
-
+        if i>100:
+            break
     return sol
 
 
@@ -142,14 +143,14 @@ def lee_fichero_imprenta(nombreFichero):
 
 def muestra_solucion(lista_hojas):
     ts = time.time()
-    st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H:%M')
-    title = 'Solution-'+ str(st)
-    new_file = open("solution/"+title+'.txt','w')
+    st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H-%M')
+    path = "entregable2/e2_aux/solution/"
+    title = 'Solution-' + str(st)
+    new_file = open(path + title + '.txt', 'w')
     for hoja in lista_hojas:
         for k, folleto in hoja.pamphlet.items():
-            new_file.write('{} {} {} {}\n'.format(hoja.id, folleto[0], k[1], k[0]))
+            new_file.write('{} {} {} {}\n'.format(folleto[0], hoja.id, k[0], k[1]))
     new_file.close()
-
 
 if __name__ == "__main__":
     start = time.time()
