@@ -125,8 +125,6 @@ def optimiza_folletos(size, folletos):
             new_hoja = Hoja(len(sol) + 1, size)
             new_hoja.put_pamphlet(folletos[i])
             sol.append(new_hoja)
-        if i>100:
-            break
     return sol
 
 
