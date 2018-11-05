@@ -5,6 +5,7 @@ from typing import *
 import time
 import datetime
 
+
 Folleto = Tuple[int, int, int]
 PosicionFolleto = Tuple[int, int, int, int]
 
@@ -29,102 +30,35 @@ ______________________________________________________________
 """
 
 
-class Hoja:
-
-    def __init__(self, id, size):
-        self.id = id
-        self.h = []
-        self.pamphlet = {}
-        self.area = size * size
-        for i in range(size):
-            self.h.append([0] * size)
-
-    def get_fist_available_by_width(self, p_width, p_height):
-        # print("get_fist_available_by_width", p_width, p_height)
-        for i in range(len(self.h)):
-            # print("I: ",i)
-            for j in range(len(self.h[0])):
-                is_ = self.is_good_place(p_width, p_height, (i, j))
-                # print("Position",i, j, "Available:", is_)
-                if self.h[i][j] == 0 and is_:
-                    return i, j
-        return
-
-    def get_fist_available_by_heigth(self, p_width, p_height, ):
-        for j in range(len(self.h[0])):
-            for i in range(len(self.h)):
-                is_ = self.is_good_place(p_width, p_height, (i, j))
-                # print("Position",i, j, "Available:", is_)
-                if self.h[i][j] == 0 and is_:
-                    return i, j
-        return
-
-    def get_data_at_position(self, position):
-        return self.pamphlet[self.h[position]]
-
-    def is_good_place(self, p_width, p_height, position):
-        r = position[0]  # row
-        c = position[1]  # col
-        # print(position)
-        if position[0] + p_width > len(self.h[0]) or position[1] + p_height > len(self.h):
-            # print("Se sale por el lado")
-            return False
-        while r < position[0] + p_width:
-            if self.h[r][position[1]] != 0:
-                # print("---- Salimos porque no hay sitio de ancho", r, "Supuesto:", position[0]+p_width, "valor:", self.h[r][position[1]])
-                return False
-            r += 1
-        while c < position[1] + p_height:
-            if self.h[position[0]][c] != 0:
-                # print("---- Salimos porque no hay sitio de alto", c, "Supuesto:", position[1]+p_height, "valor:", self.h[position[0]][c])
-                return False
-            c += 1
-        return True
-
-    def put_pamphlet(self, pamphlet):
-        pamphlet_area = pamphlet[1] * pamphlet[2]
-        # print("Area: ", self.area, "Pamphlet:", pamphlet_area)
-        if pamphlet_area <= self.area:
-            position = self.get_fist_available_by_width(pamphlet[1], pamphlet[2])
-            # position = self.get_fist_available_by_width(pamphlet[1], pamphlet[2])
-            if position is None:
-                return False
-
-            for r in range(position[0], position[0] + pamphlet[1]):
-                for c in range(position[1], position[1] + pamphlet[2]):
-                    self.h[r][c] = pamphlet[0]
-            self.pamphlet[position] = pamphlet
-            self.area -= pamphlet_area
-            return True
-        return False
-
-
 def optimiza_folletos(size, folletos):
     print(folletos)
-
-    for v in folletos:
-        print(v)
-    # We order by width descending
-    ordenado = sorted(range(len(folletos)), key=lambda x: -(folletos[x][1]))
-    print("--Ordenado--")
+    ordenado = sorted(range(len(folletos)), key=lambda x: (-folletos[x][2], -folletos[x][1]))
     sol = []
-    sol.append(Hoja(1, size))
-    print("--Empezamos--")
-    cont = 0
+    altura_actual, anchura_actual,altura_local = 0, 0, 0
+    hoja_actual = 1
+    siguiente_altura = 0
+    hojas =[]
+
+
     for i in ordenado:
-        cont += 1
-        print("Folleto", cont, "de", len(folletos),
-              "| Hojas hasta el momento:", len(sol))
-        added = False
-        for hoja in sol:
-            res = hoja.put_pamphlet(folletos[i])
-            if res:
-                added = True
-                break
-        if not added:
-            new_hoja = Hoja(len(sol) + 1, size)
-            new_hoja.put_pamphlet(folletos[i])
-            sol.append(new_hoja)
+
+        if anchura_actual + folletos[i][1] <= size and altura_actual + folletos[i][2] <= size:  # comparamos anchura y altura
+            sol.append((folletos[i][0], hoja_actual, anchura_actual, altura_actual))
+            anchura_actual += folletos[i][1]
+            if siguiente_altura < folletos[i][2] + siguiente_altura:
+                siguiente_altura = folletos[i][2] + altura_local
+        else:
+            altura_actual = siguiente_altura
+            if anchura_actual + folletos[i][1] <= size:
+                sol.append((folletos[i][0], hoja_actual, 0, altura_actual))
+                anchura_actual = folletos[i][1]
+            else:  # Crea una nueva hoja
+                hoja_actual += 1
+                altura_actual = 0
+                sol.append((folletos[i][0], hoja_actual, 0, 0))
+                anchura_actual = folletos[i][1]
+                altura_local = folletos[i][2]
+
     return sol
 
 
@@ -139,17 +73,17 @@ def lee_fichero_imprenta(nombreFichero):
     return int(m), folletos
 
 
-def muestra_solucion(lista_hojas):
+def muestra_solucion(lista_folletos):
     ts = time.time()
     st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H-%M')
-    path = "C:\\Users\\Abrahan\\PycharmProjects\\Practicas-Algoritmia\\entregable2\\e2_aux\\solution\\" #windows
-    #path = "solution/" #linux
-    title = 'Solution-' + str(st)+'.txt'
-    new_file = open(path+title, 'w')
-    for hoja in lista_hojas:
-        for k, folleto in hoja.pamphlet.items():
-            new_file.write('{} {} {} {}\n'.format(folleto[0], hoja.id, k[0], k[1]))
+    path = "C:\\Users\\Abrahan\\PycharmProjects\\Practicas-Algoritmia\\entregable2\\e2_aux\\solution\\"  # windows
+    # path = "solution/" #linux
+    title = 'Solution-' + str(st) + '.txt'
+    new_file = open(path + title, 'w')
+    for folleto in lista_folletos:
+        new_file.write('{} {} {} {}\n'.format(folleto[0], folleto[1], folleto[2], folleto[3]))
     new_file.close()
+
 
 if __name__ == "__main__":
     start = time.time()
