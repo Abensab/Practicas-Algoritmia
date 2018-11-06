@@ -46,8 +46,7 @@ def optimiza_folletos(size, folletos):
     for i in indices_folletos:
         insertada = False
         for hoja in hojas:
-            if(hoja.id==1 and folletos[i][1]==4):
-                print("..",hoja.id, folletos[i])
+
             if hoja.ancho_actual + folletos[i][1] <= size:  #Cabe de ancho
                 if hoja.id==1:
                     print(hoja.ancho_actual, folletos[i])
