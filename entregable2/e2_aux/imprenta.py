@@ -5,7 +5,6 @@ from typing import *
 import time
 import datetime
 
-
 Folleto = Tuple[int, int, int]
 PosicionFolleto = Tuple[int, int, int, int]
 
@@ -30,34 +29,45 @@ ______________________________________________________________
 """
 
 
+class Hoja:
+    def __init__(self, id, alto_actual, ancho_actual, siguiente_altura):
+        self.id = id
+        self.alto_actual = alto_actual
+        self.ancho_actual = ancho_actual
+        self.siguiente_altura = siguiente_altura
+
+
 def optimiza_folletos(size, folletos):
-    print(folletos)
-    ordenado = sorted(range(len(folletos)), key=lambda x: (-folletos[x][2], -folletos[x][1]))
+    indices_folletos = sorted(range(len(folletos)), key=lambda x: (-folletos[x][2], -folletos[x][1]))
     sol = []
-    altura_actual, anchura_actual,altura_local = 0, 0, 0
-    hoja_actual = 1
-    siguiente_altura = 0
-    hojas =[]
+    # altura_actual, anchura_actual, altura_local, siguiente_altura = 0, 0, 0, 0
+    # hoja_actual = 1
+    hojas = [Hoja(1, 0, 0, folletos[indices_folletos[0]][2])]
+    for i in indices_folletos:
+        insertada = False
+        for hoja in hojas:
+            if(hoja.id==1 and folletos[i][1]==4):
+                print("..",hoja.id, folletos[i])
+            if hoja.ancho_actual + folletos[i][1] <= size:  #Cabe de ancho
+                if hoja.id==1:
+                    print(hoja.ancho_actual, folletos[i])
+                sol.append((folletos[i][0], hoja.id, hoja.ancho_actual, hoja.alto_actual))
+                hoja.ancho_actual += folletos[i][1]
+                insertada = True
+                break
+            elif hoja.siguiente_altura + folletos[i][2]<=size: #Cabe en la siguiente fila
+                sol.append((folletos[i][0], hoja.id, 0, hoja.siguiente_altura))
+                hoja.ancho_actual = folletos[i][1]
+                hoja.alto_actual = hoja.siguiente_altura
+                hoja.siguiente_altura = hoja.siguiente_altura + folletos[i][2]
+                insertada = True
+                break
 
-
-    for i in ordenado:
-
-        if anchura_actual + folletos[i][1] <= size and altura_actual + folletos[i][2] <= size:  # comparamos anchura y altura
-            sol.append((folletos[i][0], hoja_actual, anchura_actual, altura_actual))
-            anchura_actual += folletos[i][1]
-            if siguiente_altura < folletos[i][2] + siguiente_altura:
-                siguiente_altura = folletos[i][2] + altura_local
-        else:
-            altura_actual = siguiente_altura
-            if anchura_actual + folletos[i][1] <= size:
-                sol.append((folletos[i][0], hoja_actual, 0, altura_actual))
-                anchura_actual = folletos[i][1]
-            else:  # Crea una nueva hoja
-                hoja_actual += 1
-                altura_actual = 0
-                sol.append((folletos[i][0], hoja_actual, 0, 0))
-                anchura_actual = folletos[i][1]
-                altura_local = folletos[i][2]
+        if not insertada:# Crea una nueva hoja e insertamos el folleto en ella
+            h = Hoja(len(hojas)+1, 0, 0, folletos[i][2])
+            sol.append((folletos[i][0], h.id, 0, 0))
+            h.ancho_actual = folletos[i][1]
+            hojas.append(h)
 
     return sol
 
@@ -75,7 +85,7 @@ def lee_fichero_imprenta(nombreFichero):
 
 def muestra_solucion(lista_folletos):
     ts = time.time()
-    st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H-%M')
+    st = datetime.datetime.fromtimestamp(ts).strftime('%M')
     path = "C:\\Users\\Abrahan\\PycharmProjects\\Practicas-Algoritmia\\entregable2\\e2_aux\\solution\\"  # windows
     # path = "solution/" #linux
     title = 'Solution-' + str(st) + '.txt'
@@ -87,7 +97,6 @@ def muestra_solucion(lista_folletos):
 
 if __name__ == "__main__":
     start = time.time()
-    print(sys.path)
     i, v = lee_fichero_imprenta(sys.argv[1])
     res = optimiza_folletos(i, v)
     print("--", len(res), "folletos")
