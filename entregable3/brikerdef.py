@@ -120,8 +120,8 @@ class Block:
         if self.is_standing():
             for i, p1, p2 in enumerate(standing):
                 block1, block2 = self._b1.add_row(p1[0]), self._b1.add_row(p2[0])
-                block1.add_col(p1[1])
-                block2.add_col(p2[1])
+                block1 = block1.add_col(p1[1])
+                block2 = block2.add_col(p2[1])
 
                 if is_valid_pos(block1) and is_valid_pos(block2):
                     valid_moves.append(moves[i])
@@ -144,8 +144,8 @@ class Block:
             if self._b1.col < self._b2.col:
                 for i, p1, p2 in enumerate(lying_col):
                     block1, block2 = self._b1.add_row(p1[0]), self._b1.add_row(p2[0])
-                    block1.add_col(p1[1])
-                    block2.add_col(p2[1])
+                    block1 = block1.add_col(p1[1])
+                    block2 = block2.add_col(p2[1])
                     if is_valid_pos(block1) and is_valid_pos(block2):
                         valid_moves.append(moves[i])
                 """   
@@ -161,8 +161,8 @@ class Block:
             else:
                 for i, p1, p2 in enumerate(lying_col):
                     block2, block1 = self._b1.add_row(p1[0]), self._b1.add_row(p2[0])
-                    block2.add_col(p1[1])
-                    block1.add_col(p2[1])
+                    block2 = block2.add_col(p1[1])
+                    block1 = block1.add_col(p2[1])
                     if is_valid_pos(block1) and is_valid_pos(block2):
                         valid_moves.append(moves[i])
                 """
@@ -181,8 +181,8 @@ class Block:
             if self._b1.row < self._b2.row:
                 for i, p1, p2 in enumerate(lying_row):
                     block1, block2 = self._b1.add_row(p1[0]), self._b1.add_row(p2[0])
-                    block1.add_col(p1[1])
-                    block2.add_col(p2[1])
+                    block1 = block1.add_col(p1[1])
+                    block2 = block2.add_col(p2[1])
                     if is_valid_pos(block1) and is_valid_pos(block2):
                         valid_moves.append(moves[i])
                 """        
@@ -200,8 +200,8 @@ class Block:
             else:
                 for i, p1, p2 in enumerate(lying_row):
                     block2, block1 = self._b1.add_row(p1[0]), self._b1.add_row(p2[0])
-                    block2.add_col(p1[1])
-                    block1.add_col(p2[1])
+                    block2 = block2.add_col(p1[1])
+                    block1 = block1.add_col(p2[1])
                     if is_valid_pos(block1) and is_valid_pos(block2):
                         valid_moves.append(moves[i])
                 """
