@@ -45,8 +45,10 @@ class Level:
         self._sPos, self._tPos = self._load_level(self._mat)
 
     def is_valid(self, pos: Pos2D) -> bool:
-        baldosa = self._mat[pos.row][pos.col]
-        return pos.col >= 0 and pos.col < self.cols and pos.row >= 0 and pos.row < self.rows and baldosa == 'o' and baldosa == 'T'
+        if  pos.col >= 0 and pos.col < self.cols and pos.row >= 0 and pos.row < self.rows:
+            baldosa = self._mat[pos.row][pos.col]
+            return  baldosa == 'o' or baldosa == 'T'
+        return False
 
     def get_startpos(self) -> Pos2D:
         return self._sPos
@@ -55,18 +57,18 @@ class Level:
         return self._tPos
 
     def _load_level(self, matriz: List[List["char"]]) -> Tuple[Pos2D, ...]:
-        posI = Pos2D
-        posF = Pos2D
+        posI = Pos2D(0, 0)
+        posF = Pos2D(0, 0)
 
-        for fila in matriz:
-            for col in fila:
-                if matriz[fila][col] == "S":
-                    posI.add_col(col)
-                    posI.add_row(fila)
+        for i, fila in enumerate(matriz):
+            for j, col in enumerate(fila):
+                if col == 'S':
+                    posI.add_col(j)
+                    posI.add_row(i)
 
-                if matriz[fila][col] == "T":
-                    posF.add_row(fila)
-                    posF.add_col(col)
+                if col == 'T':
+                    posF.add_row(i)
+                    posF.add_col(j)
 
         return posI, posF
 
@@ -118,11 +120,10 @@ class Block:
         lying_row = [((0, -1), (0, 0)), ((0, -2), (0, 0)), ((1, 0), (1, 0)), ((-1, 0), (-1, 0))]
         moves = [Move.Up, Move.Down, Move.Right, Move.Left]
         if self.is_standing():
-            for i, p1, p2 in enumerate(standing):
-                block1, block2 = self._b1.add_row(p1[0]), self._b1.add_row(p2[0])
-                block1 = block1.add_col(p1[1])
-                block2 = block2.add_col(p2[1])
-
+            for i, p in enumerate(standing):
+                block1, block2 = self._b1.add_row(p[0][0]), self._b1.add_row(p[1][0])
+                block1 = block1.add_col(p[0][1])
+                block2 = block2.add_col(p[1][1])
                 if is_valid_pos(block1) and is_valid_pos(block2):
                     valid_moves.append(moves[i])
             """
@@ -141,81 +142,46 @@ class Block:
                 valid_moves.append(Move.Left)
             """
         if self.is_lying_on_a_col():
-            if self._b1.col < self._b2.col:
-                for i, p1, p2 in enumerate(lying_col):
-                    block1, block2 = self._b1.add_row(p1[0]), self._b1.add_row(p2[0])
-                    block1 = block1.add_col(p1[1])
-                    block2 = block2.add_col(p2[1])
-                    if is_valid_pos(block1) and is_valid_pos(block2):
-                        valid_moves.append(moves[i])
-                """   
-                if is_valid_pos(Pos2D(self._b1.row - 1, self._b1.col)):
-                    valid_moves.append(Move.Up)
-                if is_valid_pos(Pos2D(self._b1.row + 2, self._b1.col)):
-                    valid_moves.append(Move.Down)
-                if is_valid_pos(Pos2D(self._b1.row, self._b1.col + 1)) and is_valid_pos(Pos2D(self._b2.row, self._b2.col + 1)):
-                    valid_moves.append(Move.Right)
-                if is_valid_pos(Pos2D(self._b1.row, self._b1.col - 1)) and is_valid_pos(Pos2D(self._b2.row, self._b2.col - 1)):
-                    valid_moves.append(Move.Left)
-                    """
-            else:
-                for i, p1, p2 in enumerate(lying_col):
-                    block2, block1 = self._b1.add_row(p1[0]), self._b1.add_row(p2[0])
-                    block2 = block2.add_col(p1[1])
-                    block1 = block1.add_col(p2[1])
-                    if is_valid_pos(block1) and is_valid_pos(block2):
-                        valid_moves.append(moves[i])
+
+            for i, p in enumerate(standing):
+                block1, block2 = self._b1.add_row(p[0][0]), self._b1.add_row(p[1][0])
+                block1 = block1.add_col(p[0][1])
+                block2 = block2.add_col(p[1][1])
+
+            if is_valid_pos(block1) and is_valid_pos(block2):
+                valid_moves.append(moves[i])
+            """   
+            if is_valid_pos(Pos2D(self._b1.row - 1, self._b1.col)):
+                valid_moves.append(Move.Up)
+            if is_valid_pos(Pos2D(self._b1.row + 2, self._b1.col)):
+                valid_moves.append(Move.Down)
+            if is_valid_pos(Pos2D(self._b1.row, self._b1.col + 1)) and is_valid_pos(Pos2D(self._b2.row, self._b2.col + 1)):
+                valid_moves.append(Move.Right)
+            if is_valid_pos(Pos2D(self._b1.row, self._b1.col - 1)) and is_valid_pos(Pos2D(self._b2.row, self._b2.col - 1)):
+                valid_moves.append(Move.Left)
                 """
-                if is_valid_pos(Pos2D(self._b2.row - 1, self._b2.col)):
-                    valid_moves.append(Move.Up)
-                if is_valid_pos(Pos2D(self._b2.row + 2, self._b2.col)):
-                    valid_moves.append(Move.Down)
-                if is_valid_pos(Pos2D(self._b2.row, self._b2.col + 1)) and is_valid_pos(
-                        Pos2D(self._b1.row, self._b1.col + 1)):
-                    valid_moves.append(Move.Right)
-                if is_valid_pos(Pos2D(self._b2.row, self._b2.col - 1)) and is_valid_pos(
-                        Pos2D(self._b1.row, self._b1.col - 1)):
-                    valid_moves.append(Move.Left)
-                """
+
         if self.is_lying_on_a_row():
-            if self._b1.row < self._b2.row:
-                for i, p1, p2 in enumerate(lying_row):
-                    block1, block2 = self._b1.add_row(p1[0]), self._b1.add_row(p2[0])
-                    block1 = block1.add_col(p1[1])
-                    block2 = block2.add_col(p2[1])
-                    if is_valid_pos(block1) and is_valid_pos(block2):
-                        valid_moves.append(moves[i])
-                """        
-                if is_valid_pos(Pos2D(self._b1.row, self._b1.col - 1)):
-                    valid_moves.append(Move.Up)
-                if is_valid_pos(Pos2D(self._b1.row, self._b1.col + 2)):
-                    valid_moves.append(Move.Down)
-                if is_valid_pos(Pos2D(self._b1.row + 1, self._b1.col)) and is_valid_pos(
-                        Pos2D(self._b2.row + 1, self._b2.col)):
-                    valid_moves.append(Move.Right)
-                if is_valid_pos(Pos2D(self._b1.row - 1, self._b1.col)) and is_valid_pos(
-                        Pos2D(self._b2.row - 1, self._b2.col)):
-                    valid_moves.append(Move.Left)
-                """
-            else:
-                for i, p1, p2 in enumerate(lying_row):
-                    block2, block1 = self._b1.add_row(p1[0]), self._b1.add_row(p2[0])
-                    block2 = block2.add_col(p1[1])
-                    block1 = block1.add_col(p2[1])
-                    if is_valid_pos(block1) and is_valid_pos(block2):
-                        valid_moves.append(moves[i])
-                """
-                if is_valid_pos(Pos2D(self._b2.row, self._b2.col - 1)):
-                    valid_moves.append(Move.Up)
-                if is_valid_pos(Pos2D(self._b2.row, self._b2.col + 2)):
-                    valid_moves.append(Move.Down)
-                if is_valid_pos(Pos2D(self._b2.row + 1, self._b2.col)) and is_valid_pos(
-                        Pos2D(self._b1.row + 1, self._b1.col)):
-                    valid_moves.append(Move.Right)
-                if is_valid_pos(Pos2D(self._b2.row - 1, self._b2.col)) and is_valid_pos(
-                        Pos2D(self._b1.row - 1, self._b1.col)):
-                    valid_moves.append(Move.Left)
-                """
+            for i, p in enumerate(standing):
+                block1, block2 = self._b1.add_row(p[0][0]), self._b1.add_row(p[1][0])
+                block1 = block1.add_col(p[0][1])
+                block2 = block2.add_col(p[1][1])
+
+            if is_valid_pos(block1) and is_valid_pos(block2):
+                valid_moves.append(moves[i])
+
+            """        
+            if is_valid_pos(Pos2D(self._b1.row, self._b1.col - 1)):
+                valid_moves.append(Move.Up)
+            if is_valid_pos(Pos2D(self._b1.row, self._b1.col + 2)):
+                valid_moves.append(Move.Down)
+            if is_valid_pos(Pos2D(self._b1.row + 1, self._b1.col)) and is_valid_pos(
+                    Pos2D(self._b2.row + 1, self._b2.col)):
+                valid_moves.append(Move.Right)
+            if is_valid_pos(Pos2D(self._b1.row - 1, self._b1.col)) and is_valid_pos(
+                    Pos2D(self._b2.row - 1, self._b2.col)):
+                valid_moves.append(Move.Left)
+            """
 
         return valid_moves
 
