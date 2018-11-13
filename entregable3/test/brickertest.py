@@ -65,3 +65,17 @@ class TestLevel(unittest.TestCase):
         self.assertEqual(self.level.lying_row_block_final.valid_moves(self.level.level.is_valid), ['U', 'L'])
         self.assertEqual(self.level.lying_row_block_inicial.valid_moves(self.level.level.is_valid), ['D', 'R'])
 
+
+    def test_move_standing(self):
+        self.assertEqual(self.level.standing_block_inicial.move(Move.Down), Block(Pos2D(1,0), Pos2D(2,0)))
+        self.assertEqual(self.level.standing_block_inicial.move(Move.Right), Block(Pos2D(0,1), Pos2D(0,2)))#Falla
+        print(self.level.standing_block_inicial.move(Move.Right))
+        self.assertEqual(self.level.standing_block_centro.move(Move.Up),Block(Pos2D(1,2),Pos2D(0,2)))
+        self.assertEqual(self.level.standing_block_final.move(Move.Up),Block(Pos2D(1,2),Pos2D(0,2)))
+
+    def test_move_down(self):
+        pass
+    def test_move_right(self):
+        pass
+    def test_move_left(self):
+        pass
