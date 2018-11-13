@@ -10,7 +10,7 @@ class MockLevel:
         self.level = Level("C:\\Users\\Abrahan\\PycharmProjects\\Practicas-Algoritmia\\entregable3\\test\\mock.txt")
         p1, p2, p3 = Pos2D(0, 0), Pos2D(0, 1), Pos2D(1, 0)  #Esquina inicial
         p4, p5, p6 = Pos2D(2, 2), Pos2D(2, 3), Pos2D(3, 2)  #Central
-        p7, p8, p9 = Pos2D(3, 9), Pos2D(3, 8), Pos2D(4, 9)  #Esquina final
+        p7, p8, p9 = Pos2D(4, 5), Pos2D(4, 4), Pos2D(3, 5)  #Esquina final
 
         self.standing_block_inicial = Block(p1, p1)
         self.standing_block_centro = Block(p4, p4)

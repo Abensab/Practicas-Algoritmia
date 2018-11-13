@@ -51,17 +51,17 @@ class TestLevel(unittest.TestCase):
         self.assertTrue(self.level.lying_row_block_inicial.is_lying_on_a_row())
 
     def test_valid_moves_standing(self):
-        self.assertEquals(self.level.standing_block_inicial.valid_moves(self.level.level.is_valid), ['D', 'R'])
-        self.assertEquals(self.level.standing_block_centro.valid_moves(self.level.level.is_valid), ['U', 'D', 'R', 'L'])
-        self.assertEquals(self.level.standing_block_final.valid_moves(self.level.level.is_valid), ['U', 'L'])
+        self.assertEqual(self.level.standing_block_inicial.valid_moves(self.level.level.is_valid), ['D', 'R'])
+        self.assertEqual(self.level.standing_block_centro.valid_moves(self.level.level.is_valid), ['U', 'D', 'R', 'L'])
+        self.assertEqual(self.level.standing_block_final.valid_moves(self.level.level.is_valid), ['U', 'L'])
 
     def test_valid_moves_lying_col(self):
-        self.assertEquals(self.level.lying_col_block_inicial.valid_moves(self.level.level.is_valid), ['D', 'R'])
-        self.assertEquals(self.level.lying_col_block_centro.valid_moves(self.level.level.is_valid), ['U', 'D', 'R', 'L'])
-        self.assertEquals(self.level.lying_col_block_final.valid_moves(self.level.level.is_valid), ['U', 'L'])
+        self.assertEqual(self.level.lying_col_block_inicial.valid_moves(self.level.level.is_valid), ['D', 'R'])
+        self.assertEqual(self.level.lying_col_block_centro.valid_moves(self.level.level.is_valid), ['U', 'D', 'R', 'L'])
+        self.assertEqual(self.level.lying_col_block_final.valid_moves(self.level.level.is_valid), ['U', 'L'])
 
     def test_valid_moves_lying_row(self):
-        self.assertEquals(self.level.lying_row_block_inicial.valid_moves(self.level.level.is_valid), ['D', 'R'])
-        self.assertEquals(self.level.lying_row_block_centro.valid_moves(self.level.level.is_valid), ['U', 'D', 'R', 'L'])
-        self.assertEquals(self.level.lying_row_block_final.valid_moves(self.level.level.is_valid), ['U', 'L'])
+        self.assertEqual(self.level.lying_row_block_inicial.valid_moves(self.level.level.is_valid), ['D', 'R'])
+        self.assertEqual(self.level.lying_row_block_centro.valid_moves(self.level.level.is_valid), ['U', 'D', 'R', 'L'])
+        self.assertEqual(self.level.lying_row_block_final.valid_moves(self.level.level.is_valid), ['U', 'L'])
 
