@@ -2,14 +2,14 @@ import sys
 from typing import *
 
 from entregable3.e3_aux.brikerdef import Move, Block, Level
-from Utils.bt_scheme import PartialSolutionWithVisitedControl, BacktrackingVCSolver,  Solution, State
+from Utils.bt_scheme import PartialSolutionWithVisitedControl, BacktrackingVCSolver, Solution, State
 
 
 def bricker_vc_solve(level: Level):
     class BrikerVC_PS(PartialSolutionWithVisitedControl):
         def __init__(self, block: Block, decisions: Tuple[Move, ...]):
             self.block = block
-            self.decisions=decisions
+            self.decisions = decisions
             self.n = len(decisions)
 
         def is_solution(self) -> bool:
@@ -21,18 +21,18 @@ def bricker_vc_solve(level: Level):
         def successors(self) -> Iterable["BrikerVC_PS"]:
             # if not self.is_solution():
             for elem in self.block.valid_moves(level.is_valid):
-                yield BrikerVC_PS(self.block.move(elem), self.decisions+(elem,))
+                yield BrikerVC_PS(self.block.move(elem), self.decisions + (elem,))
 
         def state(self) -> State:
             return self.block
 
     # TODO: crea initial_ps y llama a BacktrackingVCSolver.solve
     bloque = Block(level.get_startpos(), level.get_startpos())
-    return BacktrackingVCSolver.solve(BrikerVC_PS(bloque,()))
+    return BacktrackingVCSolver.solve(BrikerVC_PS(bloque, ()))
 
 
 if __name__ == '__main__':
-    level_filename = "level1.txt"  # TODO: Cámbialo por sys.argv[1]
+    level_filename = sys.argv[1]
 
     print("<BEGIN BACKTRACKING>\n")
 
