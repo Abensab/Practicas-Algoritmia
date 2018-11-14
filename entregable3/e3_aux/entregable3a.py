@@ -1,8 +1,8 @@
 import sys
 from typing import *
 
-from .brikerdef import Move, Block, Level
-from Utils.bt_scheme import PartialSolutionWithVisitedControl, Solution, State
+from entregable3.e3_aux.brikerdef import Move, Block, Level
+from Utils.bt_scheme import PartialSolutionWithVisitedControl, BacktrackingVCSolver,  Solution, State
 
 
 def bricker_vc_solve(level: Level):
@@ -19,15 +19,16 @@ def bricker_vc_solve(level: Level):
             return self.decisions
 
         def successors(self) -> Iterable["BrikerVC_PS"]:
-            if not self.is_solution():
-                for elem in self.block.valid_moves(level.is_valid):
-                    yield BrikerVC_PS(self.block.move(elem), self.decisions+(elem,))
+            # if not self.is_solution():
+            for elem in self.block.valid_moves(level.is_valid):
+                yield BrikerVC_PS(self.block.move(elem), self.decisions+(elem,))
 
         def state(self) -> State:
             return self.block
 
     # TODO: crea initial_ps y llama a BacktrackingVCSolver.solve
-    raise NotImplementedError
+    bloque = Block(level.get_startpos(), level.get_startpos())
+    return BacktrackingVCSolver.solve(BrikerVC_PS(bloque,()))
 
 
 if __name__ == '__main__':

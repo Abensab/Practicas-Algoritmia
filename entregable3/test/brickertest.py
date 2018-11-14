@@ -67,15 +67,41 @@ class TestLevel(unittest.TestCase):
 
 
     def test_move_standing(self):
-        self.assertEqual(self.level.standing_block_inicial.move(Move.Down), Block(Pos2D(1,0), Pos2D(2,0)))
-        self.assertEqual(self.level.standing_block_inicial.move(Move.Right), Block(Pos2D(0,1), Pos2D(0,2)))#Falla
-        print(self.level.standing_block_inicial.move(Move.Right))
-        self.assertEqual(self.level.standing_block_centro.move(Move.Up),Block(Pos2D(1,2),Pos2D(0,2)))
-        self.assertEqual(self.level.standing_block_final.move(Move.Up),Block(Pos2D(1,2),Pos2D(0,2)))
+        #Esquina superior izquierda
+        self.assertEqual(self.level.standing_block_inicial.move(Move.Down), Block(Pos2D(1, 0), Pos2D(2, 0)))
+        self.assertEqual(self.level.standing_block_inicial.move(Move.Right), Block(Pos2D(0, 1), Pos2D(0, 2)))
+        #Centro
+        self.assertEqual(self.level.standing_block_centro.move(Move.Up), Block(Pos2D(1, 2), Pos2D(0, 2)))
+        self.assertEqual(self.level.standing_block_centro.move(Move.Down), Block(Pos2D(3, 2), Pos2D(4, 2)))
+        self.assertEqual(self.level.standing_block_centro.move(Move.Right), Block(Pos2D(2, 3), Pos2D(2, 4)))
+        self.assertEqual(self.level.standing_block_centro.move(Move.Left), Block(Pos2D(2, 0), Pos2D(2, 1)))
+        #Esquina inferior derecha
+        self.assertEqual(self.level.standing_block_final.move(Move.Up), Block(Pos2D(3, 5), Pos2D(2, 5)))
+        self.assertEqual(self.level.standing_block_final.move(Move.Left), Block(Pos2D(4, 3), Pos2D(4, 4)))
 
-    def test_move_down(self):
-        pass
-    def test_move_right(self):
-        pass
-    def test_move_left(self):
-        pass
+    def test_move_lying_on_a_col(self):
+        #Esquina superior izquierda
+        self.assertEqual(self.level.lying_col_block_inicial.move(Move.Down), Block(Pos2D(2, 0), Pos2D(2, 0)))
+        self.assertEqual(self.level.lying_col_block_inicial.move(Move.Right), Block(Pos2D(0, 1), Pos2D(1, 1)))
+        #Centro
+        self.assertEqual(self.level.lying_col_block_centro.move(Move.Up), Block(Pos2D(1, 2), Pos2D(1, 2)))
+        self.assertEqual(self.level.lying_col_block_centro.move(Move.Down), Block(Pos2D(4, 2), Pos2D(4, 2)))
+        self.assertEqual(self.level.lying_col_block_centro.move(Move.Right), Block(Pos2D(2, 3), Pos2D(3, 3)))
+        self.assertEqual(self.level.lying_col_block_centro.move(Move.Left), Block(Pos2D(2, 1), Pos2D(3, 1)))
+        #Esquina inferior derecha
+        self.assertEqual(self.level.lying_col_block_final.move(Move.Up), Block(Pos2D(2, 5), Pos2D(2, 5)))
+        self.assertEqual(self.level.lying_col_block_final.move(Move.Left), Block(Pos2D(3, 4), Pos2D(4, 4)))
+
+    def test_move_lying_on_a_row(self):
+        #Esquina superior izquierda
+        self.assertEqual(self.level.lying_row_block_inicial.move(Move.Down), Block(Pos2D(1, 0), Pos2D(1, 1)))
+        self.assertEqual(self.level.lying_row_block_inicial.move(Move.Right), Block(Pos2D(0, 2), Pos2D(0, 2)))
+        #Centro
+        self.assertEqual(self.level.lying_row_block_centro.move(Move.Up), Block(Pos2D(1, 2), Pos2D(1, 3)))
+        self.assertEqual(self.level.lying_row_block_centro.move(Move.Down), Block(Pos2D(3, 2), Pos2D(3, 3)))
+        self.assertEqual(self.level.lying_row_block_centro.move(Move.Right), Block(Pos2D(2, 4), Pos2D(2, 4)))
+        self.assertEqual(self.level.lying_row_block_centro.move(Move.Left), Block(Pos2D(2, 1), Pos2D(2, 1)))
+        #Esquina inferior derecha
+        self.assertEqual(self.level.lying_row_block_final.move(Move.Up), Block(Pos2D(3, 4), Pos2D(3, 5)))
+        self.assertEqual(self.level.lying_row_block_final.move(Move.Left), Block(Pos2D(4, 3), Pos2D(4, 3)))
+

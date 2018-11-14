@@ -63,12 +63,9 @@ class Level:
         for i, fila in enumerate(matriz):
             for j, col in enumerate(fila):
                 if col == 'S':
-                    posI.add_col(j)
-                    posI.add_row(i)
-
+                    posI = posI.add_col(j).add_row(i)
                 if col == 'T':
-                    posF.add_row(i)
-                    posF.add_col(j)
+                    posF = posF.add_col(j).add_row(i)
 
         return posI, posF
 
@@ -114,7 +111,6 @@ class Block:
         return self._b1.row != self._b2.row and self._b1.col == self._b2.col
 
     def valid_moves(self, is_valid_pos: Callable[[Pos2D], bool]) -> Iterable[Move]:
-        # TODO: Corregir código duplicado
         valid_moves = []
         standing = [((-2, 0), (-1, 0)), ((2, 0), (1, 0)), ((0, 2), (0, 1)), ((0, -2), (0, -1))]
         lying_row = [((-1, 0), (-1, 0)), ((1, 0), (1, 0)), ((0, 2), (0, 1)), ((0, -1), (0, -2))]
@@ -129,7 +125,6 @@ class Block:
                     valid_moves.append(moves[i])
 
         if self.is_lying_on_a_col():
-            print(self._b1, self._b2)
             for i, p in enumerate(lying_col):
                 block1, block2 = self._b1.add_row(p[0][0]), self._b2.add_row(p[1][0])
                 block1 = block1.add_col(p[0][1])
@@ -139,7 +134,6 @@ class Block:
                     valid_moves.append(moves[i])
 
         if self.is_lying_on_a_row():
-            print(self._b1, self._b2)
             for i, p in enumerate(lying_row):
                 block1, block2 = self._b1.add_row(p[0][0]), self._b2.add_row(p[1][0])
                 block1 = block1.add_col(p[0][1])
@@ -152,8 +146,6 @@ class Block:
 
     def move(self, m: Move) -> "Block":
         # TODO: IMPLEMENTAR - Debe devolver un nuevo objeto 'Block', sin modificar el original
-        print(type(m),m)
-
         movimientos = {
             Move.Up: 0,
             Move.Down: 1,
@@ -162,29 +154,27 @@ class Block:
         }
         movimientos_estado = [(((-1, 0), (-2, 0)), ((-1, 0), (-2, 0)), ((-1, 0), (-1, 0))),
                               (((1, 0), (2, 0)), ((2, 0), (1, 0)), ((1, 0), (1, 0))),
-                              (((0, 1), (0, 2)), ((0, 1), (0, 1)), ((2, 0), (1, 0))),
+                              (((0, 1), (0, 2)), ((0, 1), (0, 1)), ((0, 2), (0, 1))),
                               (((0, -2), (0, -1)), ((0, -1), (0, -1)), ((0, -1), (0, -2)))]
-        print(type(movimientos), movimientos)
-        print(type(movimientos_estado), type(movimientos_estado[0]),type(movimientos_estado[0][0]), type(movimientos_estado[0][0][0]))
         if self.is_standing():
             b1 = self._b1.add_row(movimientos_estado[movimientos[m]][0][0][0])
-            b1.add_col(movimientos_estado[movimientos[m]][0][0][1])
+            b1 = b1.add_col(movimientos_estado[movimientos[m]][0][0][1])
             b2 = self._b2.add_row(movimientos_estado[movimientos[m]][0][1][0])
-            b2.add_col(movimientos_estado[movimientos[m]][0][1][1])
+            b2 = b2.add_col(movimientos_estado[movimientos[m]][0][1][1])
             return Block(b1, b2)
 
         elif self.is_lying_on_a_col():
             b1 = self._b1.add_row(movimientos_estado[movimientos[m]][1][0][0])
-            b1.add_col(movimientos_estado[movimientos[m]][1][0][1])
+            b1 = b1.add_col(movimientos_estado[movimientos[m]][1][0][1])
             b2 = self._b2.add_row(movimientos_estado[movimientos[m]][1][1][0])
-            b2.add_col(movimientos_estado[movimientos[m]][1][1][1])
+            b2 = b2.add_col(movimientos_estado[movimientos[m]][1][1][1])
             return Block(b1, b2)
 
         elif self.is_lying_on_a_row():
             b1 = self._b1.add_row(movimientos_estado[movimientos[m]][2][0][0])
-            b1.add_col(movimientos_estado[movimientos[m]][2][0][1])
+            b1 = b1.add_col(movimientos_estado[movimientos[m]][2][0][1])
             b2 = self._b2.add_row(movimientos_estado[movimientos[m]][2][1][0])
-            b2.add_col(movimientos_estado[movimientos[m]][2][1][1])
+            b2 = b2.add_col(movimientos_estado[movimientos[m]][2][1][1])
             return Block(b1, b2)
 
 # ---------------------------------------------------------------------------------------------------------
