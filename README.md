@@ -1,3 +1,62 @@
+# Como crear nuevas ramas y uso de gitflow
+
+En primer lugar siempre que se quiera editar un código sin perder la versión de la rama 'master' ha de crearse una rama desde master.
+
+1. Comprobar si existe la rama `dev`:
+    Antes de crear una nueva rama a partir de `master`, hay que comprobar si existe la rama `dev`. 
+   
+    `dev` es la rama donde se suben todos los `commit` que están en desarrollo (development).
+   
+    Para cambiar a esta rama debemos usar el comando de git:
+    `git checkout dev`
+    
+    En ocasiones ejecutar esta instrucción nos dará un problema:
+      1. Nuestra rama `master` local está desactualizada.
+        En este caso ejecutamos `git pull` y ya estaría solucionado.
+      2. La rama actual tiene cambios sin subir aun.
+        En este caso commiteamos los cambios y los subimos con `push`.
+        
+     Bien, una vez en esta rama ya podemos realizar cambios sin 'desmoronar' el proyecto, pero cuidado, otros compañeros de equipo pueden estar subiendo su versión a dev y tu puedes 'machacar' su trabajo. Por ello se utilizan las `feature`.
+     
+2. Como usar las `features`:
+  Para utilizar bien las `features` y el flujo de nuestro proyecto, existe un plugin de git llamado gitflow. Para usarlo, debemos seguir los siguientes pasos:
+  1. Comprobar que no hay cambios en ninguna de nuestras ramas, para ello, cambiar una por una y hacer `git pull`
+  2. Ubicarnos en la rama `master`.
+  3. Iniciar gitflow en nuestro ordenador:
+    `git flow init`
+    Esto generará una secuencia de pasos para nombrar cada rama de gitflow como en la siguiente imagen, y te preguntara por el nombre de cada rama las unicas que deben tener el nombre establecido son master:`master` y development:`dev`. Seguir estos pasos de ejemplo:
+<pre>
+Branch name for production releases: [master] ↵
+Which branch should be used for integration of the "next release"?
+   - dev
+   - feature/abry
+Branch name for "next release" development: [] dev↵
+How to name your supporting branch prefixes?
+Feature branches? [feature/]↵
+Bugfix branches? [bugfix/]↵
+Release branches? [release/]↵
+Hotfix branches? [hotfix/]↵
+Support branches? [support/]↵
+Version tag prefix? []↵
+Hooks and filters directory? [/your/.../path]↵
+</pre>
+
+    **Asegurarse introducir estos nombres cuando se pregunten por esas ramas.**
+    ![gitflow.png](images/gitflow.png)
+  4. Comenzar una nueva feature:
+    `git flow feature start "nombre de la feature sin comillas (por ejemplo vuestro nombre) "`
+  5. Trabajar nomral, haciendo `commits` y `push`
+  6. Antes de finalizar una `feature` ya que esta se irá a `dev` hay que actualizar tu rama `dev` local:
+     <pre>
+          git checkot dev
+          git pull
+          git checkout feature/"nombre"
+          git merge dev
+          ***Resolver los conflictos si los hubiera, respetando 
+          siempre todo lo que no hayas actualizado tu.***
+          git flow feature finish feature/"nombre"
+     </pre>
+
 # Problemas a la hora de utilizar PyCharm
 
 ### 1. Ejecutar el test del primer entregable
