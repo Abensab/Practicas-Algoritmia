@@ -22,9 +22,13 @@ En primer lugar siempre que se quiera editar un código sin perder la versión d
   Para utilizar bien las `features` y el flujo de nuestro proyecto, existe un plugin de git llamado gitflow. Para usarlo, debemos seguir los siguientes pasos:
   1. Comprobar que no hay cambios en ninguna de nuestras ramas, para ello, cambiar una por una y hacer `git pull`
   2. Ubicarnos en la rama `master`.
+    <pre>git checkout master</pre>
   3. Iniciar gitflow en nuestro ordenador:
-    `git flow init`
-    Esto generará una secuencia de pasos para nombrar cada rama de gitflow como en la siguiente imagen, y te preguntara por el nombre de cada rama las unicas que deben tener el nombre establecido son master:`master` y development:`dev`. Seguir estos pasos de ejemplo:
+    <pre>git flow init</pre>
+    Esto generará una secuencia de pasos para nombrar cada rama de gitflow como en la siguiente imagen, y te preguntara por el nombre de cada rama las unicas que deben tener el nombre establecido son master:`master` y development:`dev`.<br>
+    ![gitflow.png](images/gitflow.png)
+    
+    Seguir estos pasos de ejemplo:
     <pre>
         Branch name for production releases: [master] ↵
         Which branch should be used for integration of the "next release"?
@@ -41,7 +45,7 @@ En primer lugar siempre que se quiera editar un código sin perder la versión d
         Hooks and filters directory? [/your/.../path]↵
     </pre>
     **Asegurarse introducir estos nombres cuando se pregunten por esas ramas.**
-    ![gitflow.png](images/gitflow.png)
+    
   4. Comenzar una nueva feature:
     `git flow feature start "nombre de la feature sin comillas (por ejemplo vuestro nombre) "`
   5. Trabajar nomral, haciendo `commits` y `push`
