@@ -43,11 +43,12 @@ class Level:
         self.rows = len(self._mat)
         self.cols = len(self._mat[0])
         self._sPos, self._tPos = self._load_level(self._mat)
+        print(self._sPos, self._tPos)
 
     def is_valid(self, pos: Pos2D) -> bool:
         if pos.col >= 0 and pos.col < self.cols and pos.row >= 0 and pos.row < self.rows:
             baldosa = self._mat[pos.row][pos.col]
-            return baldosa == 'o' or baldosa == 'T'
+            return baldosa !='-'
         return False
 
     def get_startpos(self) -> Pos2D:
