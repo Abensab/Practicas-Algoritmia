@@ -1,7 +1,8 @@
-ooo----ooo--
-oSoooooo-oo-
-o-o--ooo-oTo
-o-oooooo-ooo
-o-oooo---oo-
-ooo------oo-
--oooooooooo-
+ooo--oooooo-----
+oSoooooo-ooooo--
+o-o--ooo-ooo-o--
+oooo--oo-ooo-ooo
+o-oo-oo--oo--o-o
+ooo--oo-oooooo-o
+-oooo---oooo-ooo
+---ooooo--oT-ooo

@@ -1,6 +1,9 @@
-ooo-------
-oSoooo----
-ooooooooo-
--ooooooooo
------ooToo
-------ooo-
+ooo--------------ooo
+-Soooo---------oooo-
+ooooooooo--ooooooooo
+-oooooooooooooooooo-
+-----oooo--oooo-----
+------ooo--ooo------
+-------oooooo-------
+-----ooooooooooT----
+-oooooooo--oooooooo-
