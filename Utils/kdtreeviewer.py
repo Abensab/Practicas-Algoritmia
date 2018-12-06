@@ -5,12 +5,12 @@ Created on 19/11/2018
 """
 from typing import *
 from easycanvas import EasyCanvas
-from entregable4.e4_aux.kdtree import Axis, KDTree, KDNode, KDLeaf
+from Utils.kdtree import Axis, KDTree, KDNode, KDLeaf
 import sys
 
 
 class KDTreeViewer(EasyCanvas):
-    def __init__(self, kdtree: KDTree):
+    def __init__(self, kdtree):
         EasyCanvas.__init__(self)
         self.kdtree = kdtree
 

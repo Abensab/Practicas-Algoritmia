@@ -51,45 +51,46 @@ def build_kd_tree(points: List[Tuple[float, float]]) -> KDTree:
         if x == 1 and y == 1:
             return KDLeaf(points[lx[0]])
         else:
-            if abs(lx[-1] - lx[0]) > abs(ly[-1] - ly[0]):  # Cortamos por el eje Y
-                axis = Axis.Y
+            #print("-Lx:", lx, " -Ly:", ly)
+            if abs(points[lx[-1]][0] - points[lx[0]][0]) > abs(
+                    points[ly[-1]][1] - points[ly[0]][1]):  # Cortamos por el eje Y
+                #print("Elegimos X")
+                axis = Axis.X
                 if x % 2 == 0:
-                    split_value = points[lx[x // 2]][0] + points[lx[x // 2 - 1]][0] / 2
+                    split_value = (points[lx[x // 2 - 1]][0] + points[lx[x // 2]][0]) / 2
                 else:
                     split_value = points[lx[x // 2]][0]
-
                 dx, ix = lx[:x // 2], lx[x // 2:]
                 dy, iy = get_lista(dx, ly)
-
             else:  # Cortamos por el eje X
-                axis = Axis.X
-                print(points, ly)
+                #print("Elegimos Y")
+                axis = Axis.Y
                 if x % 2 == 0:
-                    split_value = points[ly[y // 2]][0] + points[ly[y // 2 - 1]][0] / 2
+                    split_value = (points[ly[y // 2]][1] + points[ly[y // 2 - 1]][1]) / 2
                 else:
-                    split_value = points[ly[y // 2]][0]
+                    split_value = points[ly[y // 2 ]][1]
                 dy, iy = ly[:y // 2], ly[y // 2:]
                 dx, ix = get_lista(dy, lx)
-
+            #print("split", axis, split_value)
             return KDNode(axis, split_value, build(dx, dy), build(ix, iy))
 
-    x_list = sorted(range(len(points)), key=lambda z: points[z][0])
+    #print(points)
+    x_list = sorted(range(len(points)), key=lambda d: points[d][0])
     y_list = sorted(range(len(points)), key=lambda z: points[z][1])
-    #indices_folletos = sorted(range(len(folletos)), key=lambda x: (-folletos[x][2], -folletos[x][1]))
-    print(points)
+    # indices_folletos = sorted(range(len(folletos)), key=lambda x: (-folletos[x][2], -folletos[x][1]))
     return build(x_list, y_list)
 
 
 def get_lista(busqueda, lugar):
     l = []
-    n = []
+    r = []
     for i in lugar:
         if i in busqueda:
             l.append(i)
         else:
-            n.append(i)
-
-    return l, n
+            r.append(i)
+    print(l, r)
+    return l, r
 
 
 if __name__ == "__main__":
