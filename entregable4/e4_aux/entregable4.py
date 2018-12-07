@@ -46,15 +46,15 @@ def build_kd_tree(points: List[Tuple[float, float]]) -> KDTree:
     return build(x_list, y_list)
 
 
-def get_list(busqueda, lugar):
-    l = []
-    r = []
+def get_list(busqueda: List[int], lugar: List[int]) ->Tuple[List[int], List[int]]:
+    left = []
+    right = []
     for i in lugar:
         if i in busqueda:
-            l.append(i)
+            left.append(i)
         else:
-            r.append(i)
-    return l, r
+            right.append(i)
+    return left, right
 
 
 if __name__ == "__main__":
