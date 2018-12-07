@@ -1,38 +1,7 @@
 import sys
-from abc import ABC, abstractmethod
 
 from typing import List, Tuple
-
-
-class Axis:
-    X = 0
-    Y = 1
-
-
-class KDTree(ABC):
-    @abstractmethod
-    def pretty(self, level: int = 0) -> str: pass
-
-
-class KDNode(KDTree):
-    def __init__(self, axis: Axis, split_value: float, child1: KDTree, child2: KDTree):
-        self.axis = axis  # Eje utilizado para separar sus hijos (Axis.X o Axis.Y)
-        self.split_value = split_value  # Coordenada x o y (depende de axis)
-        self.child1 = child1  # Hijo izquierdo o superior (Coordenada x o y (depende de axis) < split_value)
-        self.child2 = child2  # Hijo dererecho o inferior (Coordenada x o y (depende de axis) >= split_value)
-
-    def pretty(self, level: int = 0) -> str:
-        return "       " * level + f"KDNode({self.axis}, {self.split_value},\n" + \
-               self.child1.pretty(level + 1) + ",\n" + self.child2.pretty(level + 1) + "\n" + \
-               "       " * level + ")"
-
-
-class KDLeaf(KDTree):
-    def __init__(self, point: Tuple[float, float]):
-        self.point = point
-
-    def pretty(self, level: int = 0) -> str:
-        return "       " * level + "KDLeaf({0})".format(self.point)
+from Utils.kdtree import KDTree, KDLeaf, Axis, KDNode
 
 
 def read_points(filename: str) -> List[Tuple[float, float]]:
@@ -40,66 +9,55 @@ def read_points(filename: str) -> List[Tuple[float, float]]:
     for linea in open(filename).readlines():
         i = linea.split(" ")
         points.append((float(i[0]), float(i[1])))
-
     return points
 
 
 def build_kd_tree(points: List[Tuple[float, float]]) -> KDTree:
-    def build(lx, ly):
-        x = len(lx)
-        y = len(ly)
+    def build(list_x, list_y):
+        x = len(list_x)
+        y = len(list_y)
         if x == 1 and y == 1:
-            return KDLeaf(points[lx[0]])
+            return KDLeaf(points[list_x[0]])
+
         else:
-            if abs(lx[-1] - lx[0]) > abs(ly[-1] - ly[0]):  # Cortamos por el eje Y
+            if abs(points[list_x[-1]][0] - points[list_x[0]][0]) > abs(
+                    points[list_y[-1]][1] - points[list_y[0]][1]):  # Cortamos por el eje Y
+                axis = Axis.X
+                if x % 2 == 0:
+                    split_value = (points[list_x[x // 2 - 1]][0] + points[list_x[x // 2]][0]) / 2
+                else:
+                    split_value = points[list_x[x // 2]][0]
+
+                right_x, left_x = list_x[:x // 2], list_x[x // 2:]
+                right_y, left_y = get_list(right_x, list_y)
+            else:  # Cortamos por el eje X
                 axis = Axis.Y
                 if x % 2 == 0:
-                    split_value = points[lx[x // 2]][0] + points[lx[x // 2 - 1]][0] / 2
+                    split_value = (points[list_y[y // 2]][1] + points[list_y[y // 2 - 1]][1]) / 2
                 else:
-                    split_value = points[lx[x // 2]][0]
+                    split_value = points[list_y[y // 2]][1]
 
-                dx, ix = lx[:x // 2], lx[x // 2:]
-                dy, iy = get_lista(dx, ly)
+                right_y, left_y = list_y[:y // 2], list_y[y // 2:]
+                right_x, left_x = get_list(right_y, list_x)
+            return KDNode(axis, split_value, build(right_x, right_y), build(left_x, left_y))
 
-            else:  # Cortamos por el eje X
-                axis = Axis.X
-                print(points, ly)
-                if x % 2 == 0:
-                    split_value = points[ly[y // 2]][0] + points[ly[y // 2 - 1]][0] / 2
-                else:
-                    split_value = points[ly[y // 2]][0]
-                dy, iy = ly[:y // 2], ly[y // 2:]
-                dx, ix = get_lista(dy, lx)
-
-            return KDNode(axis, split_value, build(dx, dy), build(ix, iy))
-
-    x_list = sorted(range(len(points)), key=lambda z: points[z][0])
+    x_list = sorted(range(len(points)), key=lambda d: points[d][0])
     y_list = sorted(range(len(points)), key=lambda z: points[z][1])
-    #indices_folletos = sorted(range(len(folletos)), key=lambda x: (-folletos[x][2], -folletos[x][1]))
-    print(points)
     return build(x_list, y_list)
 
 
-def get_lista(busqueda, lugar):
+def get_list(busqueda, lugar):
     l = []
-    n = []
+    r = []
     for i in lugar:
         if i in busqueda:
             l.append(i)
         else:
-            n.append(i)
-
-    return l, n
+            r.append(i)
+    return l, r
 
 
 if __name__ == "__main__":
     points = read_points(sys.argv[1])
     kdtree = build_kd_tree(points)
     print(kdtree.pretty())
-    # Utilizando las dos funciones anteriores, implementa el programa entregable4.py que reciba como
-    # parámetro el nombre de un fichero de puntos, obtenga el kd-tree siguiendo el criterio de partición
-    # “estándar” presentado anteriormente y, por último, que lo imprima por pantalla. Dado que las clases
-    # KDNode y KDLeaf de partida tienen implementado el método pretty() que devuelve la
-    # información del objeto como una cadena, puedes hacerlo fácilmente con
-    # print(kdtree.pretty()).
-    pass
