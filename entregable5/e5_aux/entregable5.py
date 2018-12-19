@@ -227,13 +227,13 @@ def find_lower_energy_seam(m: MatrixGrayImage) -> List[int]:  # TODO: IMPLEMENTA
             if r <= 0:
                 mem[r, c] = (m[r][c], 0)
             elif r > 0 and c <= 0 and c >= cols - 1:
-                mem[r, c] = (rec(r - 1, c) + m[r][c], c)
+                mem[r, c] = (rec(r - 1, c)[0] + m[r][c], c)
             elif r > 0 and c == cols - 1:
-                mem[r, c] = m[r][c] + min(rec(r - 1, c - 1), rec(r - 1, c))[0]
+                mem[r, c] = min((m[r][c] + rec(r - 1, c - 1)[0], c - 1), (m[r][c] + rec(r - 1, c)[0], c))
             elif r > 0 and c == 0:
-                mem[r, c] = m[r][c] + min(rec(r - 1, c), rec(r - 1, c + 1))[0]
+                mem[r, c] =  min((m[r][c] + rec(r - 1, c)[0], c), (m[r][c] + rec(r - 1, c + 1)[0],c+1))
             elif r > 0 and c > 0 and c < cols - 1:
-                mem[r, c] = m[r][c] + min(rec(r - 1, c - 1), rec(r - 1, c), rec(r - 1, c + 1))[0]
+                mem[r, c] = min((m[r][c] + rec(r - 1, c - 1)[0], c-1), (m[r][c] + rec(r - 1, c)[0], c), (m[r][c] + rec(r - 1, c + 1)[0], c + 1))
 
         return mem[r, c]
 
@@ -245,11 +245,13 @@ def find_lower_energy_seam(m: MatrixGrayImage) -> List[int]:  # TODO: IMPLEMENTA
         if (actual[0] < minimoG):
             minimoG = actual[0]
             c_minimo = col
+
     sol = []
     r = rows-1
-    print("miau",r, mem[r,0])
+    print("MInimo", c_minimo)
+    print("miau", r, mem[r, 0])
     while r >= 0:
-        print("value: ",mem[r, c_minimo][0], "col:", mem[r, c_minimo][1])
+        print("value: ", mem[r, c_minimo][0], "col:", mem[r, c_minimo][1])
         _, c_prev = mem[r, c_minimo]
         sol.append(c_prev)
         r, c_minimo = r-1, c_prev

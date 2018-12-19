@@ -200,95 +200,48 @@ def main():
 # No es necesario modificar el código que hay ENCIMA de esta línea
 ####################################################################################
 
-# Encuentra la veta de menor energia y la devuelve como una lista de enteros: el entero en
-# la posición k, contiene el índice de la columna en la que se encuentra la veta en
-# la fila k.
-def find_lower_energy_seam(m: MatrixGrayImage) -> List[int]:  # TODO: IMPLEMENTAR
+def find_lower_energy_seam(m: MatrixGrayImage) -> List[int]:  #
     rows = len(m)
     cols = len(m[0])
-    mem = {}
-    print(rows, cols)
 
-    def M(f, c):
-        if (f, c) not in mem:
-            if f <= 0:
-                mem[f, c] = (m[f][c], 0)
-            elif f > 0 and c <= 0 and c >= cols - 1:
-                mem[f, c] = (M(f - 1, c) + m[f][c], c)
-            elif f > 0 and c <= 0 and c < cols - 1:
-                mem[f, c] = min((M(f - 1, c) + m[f][c], c), (M(f - 1, c + 1) + m[f][c], c + 1))
-            elif f > 0 and c > 0 and c >= cols - 1:
-                mem[f, c] = min((M(f - 1, c - 1) + m[f][c], c - 1), (M(f - 1, c) + m[f][c], c))
-            elif f > 0 and c > 0 and c < cols - 1:
-                mem[f, c] = min((M(f - 1, c - 1) + m[f][c], c - 1), (M(f - 1, c) + + m[f][c], c), (M(f - 1, c + 1) + m[f][c], c + 1))
-
-        return mem[f, c][0]
+    def rec(r, c):
+        if (r, c) not in mem:
+            if r <= 0:
+                mem[r, c] = (m[r][c], 0)
+            elif r > 0 and c <= 0 and c >= cols - 1:
+                mem[r, c] = (rec(r - 1, c) + m[r][c], c)
+            elif r > 0 and c <= 0 and c < cols - 1:
+                mem[r, c] = min((rec(r - 1, c) + m[r][c], c), (rec(r - 1, c + 1) + m[r][c], c + 1))
+            elif r > 0 and c > 0 and c >= cols - 1:
+                mem[r, c] = min((rec(r - 1, c - 1) + m[r][c], c - 1), (rec(r - 1, c) + m[r][c], c))
+            elif r > 0 and c > 0 and c < cols - 1:
+                mem[r, c] = min((rec(r - 1, c - 1) + m[r][c], c - 1), (rec(r - 1, c) + + m[r][c], c),
+                                (rec(r - 1, c + 1) + m[r][c], c + 1))
+        return mem[r, c][0]
 
     mem = {}
-    minimoG = infinity
-    actual = infinity
-    c_minimo = -1
-    for j in range(cols):
-        # minimoG = min(minimoG, M(rows-1, j))
-        actual = M(rows - 1, j)
-        if (actual < minimoG):
-            minimoG = actual
-            c_minimo = j
+    minimum_seam = infinity
+    minimum_col = -1
+    for c in range(cols):
+        actual = rec(rows - 1, c)
+        if actual < minimum_seam:
+            minimum_seam = actual
+            minimum_col = c
 
-    veta = list()
+    seam = [minimum_col]
     q = rows
-    veta.append(c_minimo)
     while q > 0:
         q -= 1
-        _, c_minimo = mem[q, c_minimo]
-        veta.append(c_minimo)
+        _, minimum_col = mem[q, minimum_col]
+        seam.append(minimum_col)
 
-    # Como no está implementada, para depurar el resto del programa devuelve una veta al azar:
-    #     from random import randint
-    #     veta = [randint(0,cols-1)]
-    #     for _ in range(1,rows):
-    #         veta.append(max(0,min(veta[-1]+randint(-1,1),cols-1)))
-    veta.reverse()
-    veta.pop(0)
+    seam.reverse()
+    seam.pop(0)
 
-    print("Energia: {0}".format(minimoG))
-    print("Veta: {0}".format(veta))
+    print("Energy: {0}".format(minimum_seam))
+    print("Seam: {0}".format(seam))
 
-    return veta
-
-    # def rec(r: int, c: int) -> List[int]:
-        # if r == 0:
-        #     if c == cols - 1:
-        #         i = min(m[r][c - 1], m[r][c])
-        #     elif c == 0:
-        #         i = min(m[r][c], m[r][c + 1])
-        #     else:
-        #         i = min(m[r][c - 1], m[r][c], m[r][c + 1])
-        #     mem[r, c] = (m[r][i], (0, 0))
-        #
-        # if (r, c) not in mem:
-        #     if c == cols - 1:
-        #         mem[(r, c)] = (m[r][c] + min(rec(r - 1, c - 1)[0], rec(r - 1, c)[0]), (r - 1, c))
-        #     elif c == 0:
-        #         mem[(r, c)] = (m[r][c] + min(rec(r - 1, c)[0], rec(r - 1, c + 1)[0]), (r - 1, c))
-        #     else:
-        #         mem[(r, c)] = (m[r][c] + min(rec(r - 1, c - 1)[0], rec(r - 1, c)[0], rec(r - 1, c + 1)[0]), (r - 1, c))
-        #
-        # return mem[(r, c)]
-
-    # minimo, inicial = min([M(rows - 1, col) for col in range(cols)])
-    # print (minimo, inicial)
-    # print(minimo, inicial)
-    # sol = []
-    # r,c = inicial
-    # while (r, c) != (0, 0):
-    #     _, (rPrev, cPrev) = mem[r, c]
-    #     sol.append((rPrev, cPrev))
-    #     r, c = rPrev, cPrev
-    # sol.reverse()
-    # return sol
-
-
+    return seam
 
 ####################################################################################
 # No es necesario modificar el código que hay DEBAJO de esta línea
