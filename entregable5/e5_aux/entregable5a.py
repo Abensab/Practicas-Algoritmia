@@ -206,13 +206,13 @@ def find_lower_energy_seam(m: MatrixGrayImage) -> List[int]:  #
 
     def rec(r, c):
         if (r, c) not in mem:
-            if r <= 0:
-                mem[r, c] = (m[r][c], 0)
-            elif r > 0 and c <= 0 and c >= cols - 1:
+            if r == 0:
+                mem[r, c] = (m[r][c], c)
+            elif r > 0 and c == 0 and c == cols-1:
                 mem[r, c] = (rec(r - 1, c) + m[r][c], c)
-            elif r > 0 and c <= 0 and c < cols - 1:
+            elif r > 0 and c == 0 and c < cols - 1:
                 mem[r, c] = min((rec(r - 1, c) + m[r][c], c), (rec(r - 1, c + 1) + m[r][c], c + 1))
-            elif r > 0 and c > 0 and c >= cols - 1:
+            elif r > 0 and c > 0 and c == cols - 1:
                 mem[r, c] = min((rec(r - 1, c - 1) + m[r][c], c - 1), (rec(r - 1, c) + m[r][c], c))
             elif r > 0 and c > 0 and c < cols - 1:
                 mem[r, c] = min((rec(r - 1, c - 1) + m[r][c], c - 1), (rec(r - 1, c) + + m[r][c], c),
